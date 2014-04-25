@@ -211,6 +211,10 @@
 					meta: utils.getCapabilities()
 				};
 
+				if (MARKETPLACE_URI.indexOf('TEST') >= 0) {
+					jsonPayload.production = false;
+				}
+
 				return jsonPayload;
 			},
 
@@ -218,10 +222,11 @@
 				return $.ajax({
 					url: URL,
 					type: 'POST',
-					data: payload,
+					data: JSON.stringify(payload),
 					dataType: 'json',
 					success: success,
-					error: failure
+					error: failure,
+					contentType: 'application/json; charset=UTF-8'
 				});
 			},
 
@@ -364,6 +369,9 @@
 			setQueryString: function(queryString) {
 				queryParams = $.parseParams(queryString);
 				redirectUri = queryParams.redirect_uri || redirectUri;
+				if (queryParams.production === false) {
+					KYCLib.setMarketPlaceUri('TEST-MP123');
+				}
 
 				KYCLib.fillInFormWithQueryParams($form, queryParams);
 			},
